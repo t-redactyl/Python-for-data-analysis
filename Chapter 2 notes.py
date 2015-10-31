@@ -5,9 +5,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-names = pd.read_csv('names/babynames.txt', 
+names = pd.read_csv('names/babynames.txt', \
 	names = ['year', 'sex', 'name', 'births'])
-total_births = names.pivot_table('births', 
+total_births = names.pivot_table('births', \
 	index = 'year', columns = 'sex', aggfunc = sum)
 total_births.tail()
 total_births.plot(title = 'Total births by sex and year')
@@ -18,7 +18,7 @@ def add_prop(group):
 
 	group['prop'] = births / births.sum()
 	return group
-names = name.groupby(['year', 'sex']).apply(add_prop)
+names = names.groupby(['year', 'sex']).apply(add_prop)
 
 # Check that group sums add to 1 (or close enough)
 np.allclose(names.groupby(['year', 'sex']).prop.sum(), 1)
@@ -35,16 +35,16 @@ len(top1000.index)
 boys = top1000[top1000.sex == 'M']
 girls = top1000[top1000.sex == 'F']
 
-total_births = top1000.pivot_table('births', index = 'year'
+total_births = top1000.pivot_table('births', index = 'year', \
 	columns = 'name', aggfunc = sum)
 subset = total_births[['John', 'Harry', 'Mary', 'Marilyn']]
-subset.plot(subplots = True, figsize = (12, 10), grid = False,
+subset.plot(subplots = True, figsize = (12, 10), grid = False, \
 	title = 'Number of births per year')
 
-table = top1000.pivot_table('prop', index = 'year', 
+table = top1000.pivot_table('prop', index = 'year', \
 	columns = 'sex', aggfunc = sum)
-table.plot(title = 'Sum of table1000.prop by year and sex', 
-	yticks = np.linspace(0, 1.2, 13),
+table.plot(title = 'Sum of table1000.prop by year and sex', \
+	yticks = np.linspace(0, 1.2, 13), \
 	xticks = range(1880, 2020, 10))
 
 # Computing name diversity in top 50%
@@ -72,7 +72,7 @@ get_last_letter = lambda x: x[-1]
 last_letters = names.name.map(get_last_letter)
 last_letters.name = 'last_letter'
 
-table = names.pivot_table('births', index = last_letters,
+table = names.pivot_table('births', index = last_letters, \
 	columns = ['sex', 'year'], aggfunc = sum)
 
 subtable = table.reindex(columns = [1910, 1960, 2010], level = 'year')
@@ -82,7 +82,7 @@ subtable.sum()
 letter_prop = subtable / subtable.sum().astype(float)
 fig, axes = plt.subplots(2, 1, figsize = (10, 8))
 letter_prop['M'].plot(kind = 'bar', rot = 0, ax = axes[0], title = 'Male')
-letter_prop['F'].plot(kind = 'bar', rot = 0, ax = axes[1], title = 'Female',
+letter_prop['F'].plot(kind = 'bar', rot = 0, ax = axes[1], title = 'Female', \
 	legend = False)
 
 letter_prop = table / table.sum().astype(float)
@@ -101,7 +101,7 @@ lesley_like
 filtered = top1000[top1000.name.isin(lesley_like)]
 filtered.groupby('name').births.sum()
 
-table = filtered.pivot_table('births', index = 'year', columns = 'sex',
+table = filtered.pivot_table('births', index = 'year', columns = 'sex', \
 	aggfunc = sum)
 table = table.div(table.sum(1), axis = 0)
 table.tail()
@@ -117,13 +117,13 @@ jodie_like
 filtered = top1000[top1000.name.isin(jodie_like)]
 filtered.groupby('name').births.sum()
 
-table = filtered.pivot_table('births', index = 'year', columns = 'sex',
+table = filtered.pivot_table('births', index = 'year', columns = 'sex', \
 	aggfunc = sum)
 table = table.div(table.sum(1), axis = 0)
 table.tail()
 
-table.plot(style = {'M': 'k-', 'F': 'k--'}, 
-	title = "Frequency of Jodie-like names by gender",
+table.plot(style = {'M': 'k-', 'F': 'k--'}, \
+	title = "Frequency of Jodie-like names by gender", \
 	xticks = range(1940, 2010, 10))
 
 
